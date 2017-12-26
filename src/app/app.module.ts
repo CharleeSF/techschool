@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { MainComponent } from 'app/main/main.component';
 import { PlanningComponent } from './planning/planning.component';
 import { CalendarComponent } from './calendar/calendar.component';
+import { EventService } from './calendar/events.service';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,7 @@ import { CalendarComponent } from './calendar/calendar.component';
       { path: 'planning', component: PlanningComponent }
     ])
   ],
-  providers: [],
+  providers: [EventService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

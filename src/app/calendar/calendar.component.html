@@ -1,4 +1,5 @@
-<div id="calendar-container">
+Bla
+<div id="calendar-container" *ngIf="state!==undefined">
   <h3>{{monthNames[state.month-1]}}</h3>
   <table>
     <tr>
@@ -6,7 +7,14 @@
     </tr>
     <tr id="week-list" *ngFor="let week of state.weeks">
       <td id="day-list" *ngFor="let day of week.days">
-        <p id="day-container" *ngIf="day!==undefined">{{day.monthNum}}</p>
+        <section id="day-container" *ngIf="day!==undefined">
+          <p id="daynum">{{day.monthNum}}</p>
+          <section *ngIf="day.events.length>0" class="events">
+            <p *ngFor="let event of day.events" class="event" [class.lecture]="event.isLecture">
+              {{event.description}}
+            </p>
+          </section>
+        </section>
       </td>
     </tr>
   </table>

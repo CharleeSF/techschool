@@ -32,14 +32,28 @@ th {
     height: 4em;
     background-color: rgb(245, 245, 245);
     text-align: right;
+    
+    
 }
 
 #day-container:hover {
     background-color: lightgrey;
 }
 
-.invisible {
-    background-color: red;
+.events {
+    border: black solid;
+}
+.event {
+    font-size: 7px;
+    margin: 0px;
+    padding: 0px;
+    text-align: left;
 }
 
+#daynum {
+    border: black solid 1px;
+}
 
+.lecture {
+    background-color: lightgreen;
+}

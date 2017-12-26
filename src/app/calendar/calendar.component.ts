@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { EventService } from './events.service';
+
 const NUMBER_OF_WEEKDAYS = 7;
 const MONTH_NAMES = ['January', 'February',
                     'March', 'April',
@@ -16,15 +18,25 @@ export class CalendarComponent implements OnInit {
 
   state: Month;
   monthNames: string[];
+  data: Map<String,Map<string,Array<Map<string, string>>>>;
 
-  constructor() { }
+  constructor(private eventService: EventService) { }
 
   ngOnInit() {
+    this.eventService.getEvents()
+        .subscribe(data => 
+          this.state = consumeData(this, year, month, data));
+
     let [year, month] = getNow();
-    this.state = new Month(year, month);
     this.monthNames = MONTH_NAMES;
+
   }
 
+  printEvents = getEvents;
+}
+
+function consumeData(object, year, month, data) {
+  return new Month(year, month, data);
 }
 
 class Month {
@@ -32,13 +44,13 @@ class Month {
   startDay: number;
   numDays: number;
   weeks: Week[];
-  constructor(year, month) {
+  constructor(year, month, data) {
     this.month = month;
     this.startDay = getStartDay(year, month); // on what day of the week falls the first day
     this.numDays = getNumDays(year, month);
     this.weeks = [];
     while ((this.weeks.length*NUMBER_OF_WEEKDAYS-this.startDay)<this.numDays) {
-      this.weeks.push(new Week(this.weeks.length, this.startDay, this.numDays));
+      this.weeks.push(new Week(data, year, this.month, this.weeks.length, this.startDay, this.numDays));
     }
   }
 }
@@ -46,7 +58,7 @@ class Month {
 class Week {
   weekNum: number;
   days: Day[];
-  constructor(numberOfWeeksSoFar, monthStartDay, numDays) {
+  constructor(data, year, month, numberOfWeeksSoFar, monthStartDay, numDays) {
     this.days = [];
     let startLoop = 1;
     if (numberOfWeeksSoFar == 0){
@@ -59,7 +71,7 @@ class Week {
       let dayNum = numberOfWeeksSoFar*NUMBER_OF_WEEKDAYS-monthStartDay;
 
       if ((dayNum + i) < numDays) {
-        this.days.push(new Day(dayNum+i+1, i));
+        this.days.push(new Day(data, year, month, dayNum+i+1, i));
       }
       else {
         this.days.push(undefined);
@@ -71,9 +83,24 @@ class Week {
 class Day {
   monthNum: number;
   weekNum: number;
-  constructor(monthNum, weekNum) {
+  events: Event[];
+  constructor(data, year, month, monthNum, weekNum) {
     this.monthNum = monthNum;
     this.weekNum = weekNum;
+    this.events = getEvents(data, year, month, this.monthNum);
+  }
+}
+
+class Event {
+  description: string;
+  start: [number, number];
+  end: [number, number];
+  isLecture: boolean;
+  constructor(description, start, end, isLecture) {
+    this.description = description;
+    this.start = start;
+    this.end = end;
+    this.isLecture = isLecture;
   }
 }
 
@@ -89,4 +116,27 @@ function getStartDay(year, month) {
 
 function getNumDays(year, month) {
   return 30;
+}
+
+function getEvents(data, year, month, dayNum) {
+  if (data!==undefined) {
+    let events = [];
+    let eventsJson = data[year][month][dayNum];
+    if (eventsJson!==undefined) {
+      for (event of eventsJson) {
+        console.log(event);
+        events.push(new Event(event["description"],
+                              [event["start_hours"], event["start_minutes"]],
+                              [event["stop_hours"], event["stop_minutes"]],
+                            event["isLecture"]));
+      }
+    }
+    return events;
+  }
+  else {
+    console.log("no data :(");
+    return [new Event("bla", [20,30], [21,30], false)];
+    
+  }
+  
 }
