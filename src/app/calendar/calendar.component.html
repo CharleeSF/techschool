@@ -1,0 +1,13 @@
+<div id="calendar-container">
+  <h3>{{monthNames[state.month-1]}}</h3>
+  <table>
+    <tr>
+        <th *ngFor="let dayname of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']"><p>{{dayname}}</p></th>
+    </tr>
+    <tr id="week-list" *ngFor="let week of state.weeks">
+      <td id="day-list" *ngFor="let day of week.days">
+        <p id="day-container" *ngIf="day!==undefined">{{day.monthNum}}</p>
+      </td>
+    </tr>
+  </table>
+</div>

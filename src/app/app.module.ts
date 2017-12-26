@@ -7,12 +7,14 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { MainComponent } from 'app/main/main.component';
 import { PlanningComponent } from './planning/planning.component';
+import { CalendarComponent } from './calendar/calendar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainComponent,
-    PlanningComponent
+    PlanningComponent,
+    CalendarComponent
   ],
   imports: [
     BrowserModule,

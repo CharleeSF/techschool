@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CalendarComponent } from '../calendar/calendar.component';
 
 @Component({
   selector: 'app-planning',
