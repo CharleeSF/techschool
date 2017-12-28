@@ -8,6 +8,7 @@ const MONTH_NAMES = ['January', 'February',
                     'July', 'August',
                     'September', 'Oktober',
                     'November', 'December'];
+const EMPTY_DATA = {};                    
 
 @Component({
   selector: 'app-calendar',
@@ -16,35 +17,66 @@ const MONTH_NAMES = ['January', 'February',
 })
 export class CalendarComponent implements OnInit {
 
-  state: Month;
-  monthNames: string[];
-  data: Map<String,Map<string,Array<Map<string, string>>>>;
-
   constructor(private eventService: EventService) { }
 
-  ngOnInit() {
-    this.eventService.getEvents()
-        .subscribe(data => 
-          this.state = consumeData(this, year, month, data));
+  state: Month;
+  monthNames: string[];
 
+  ngOnInit() {
     let [year, month] = getNow();
+
+    this.eventService.getEvents(year, month)
+        .subscribe(data => 
+          this.state = new Month(year, month, data));
+    
     this.monthNames = MONTH_NAMES;
 
   }
 
-  printEvents = getEvents;
-}
+  changeMonth(direction) {
+    let comparison;
+    let adder;
+    let year;
+    let month;
+    let resetMonth;
+    if (direction==="previous") {
+      comparison = this.state.month === 1;
+      adder = -1;
+      resetMonth = 12;
+    }
+    else if (direction==="next") {
+      comparison = this.state.month ===12;
+      adder = +1;
+      resetMonth = 1;
+    }
 
-function consumeData(object, year, month, data) {
-  return new Month(year, month, data);
+    if (comparison) {
+      year = this.state.year + adder;
+      month = resetMonth;
+    }
+    else {
+      year = this.state.year;
+      month = this.state.month + adder;
+    }
+
+    this.setEvents(year, month);
+  }
+
+  setEvents(year, month) {
+    let serviceOutput = this.eventService.getEvents(year, month).
+    subscribe( data => this.state = new Month(year, month, data),
+               err => this.state = new Month(year, month, EMPTY_DATA));;
+  }
 }
 
 class Month {
+  year: number;
   month: number;
   startDay: number;
   numDays: number;
   weeks: Week[];
   constructor(year, month, data) {
+    this.year = year;
     this.month = month;
     this.startDay = getStartDay(year, month); // on what day of the week falls the first day
     this.numDays = getNumDays(year, month);
@@ -121,7 +153,7 @@ function getNumDays(year, month) {
 function getEvents(data, year, month, dayNum) {
   if (data!==undefined) {
     let events = [];
-    let eventsJson = data[year][month][dayNum];
+    let eventsJson = data[dayNum];
     if (eventsJson!==undefined) {
       for (event of eventsJson) {
         console.log(event);

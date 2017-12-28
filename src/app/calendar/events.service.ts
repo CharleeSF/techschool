@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import 'rxjs/add/operator/map';
 
 @Injectable()
@@ -7,8 +7,13 @@ export class EventService {
 
   constructor(private http: Http) { }
 
-  getEvents() {
-    return this.http.get('assets/mocks.json')
-          .map(response => response.json().eventsData);
+  getEvents(year, monthNumber) {
+    try {
+      return this.http.get(`assets/mocks_${year}_${monthNumber}.json`)
+      .map(response => response.json().eventsData);
+    }
+    catch(err) {
+      return err;
+    }
   }
 }

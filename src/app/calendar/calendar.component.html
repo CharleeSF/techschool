@@ -1,6 +1,12 @@
-Bla
 <div id="calendar-container" *ngIf="state!==undefined">
-  <h3>{{monthNames[state.month-1]}}</h3>
+  <h3>
+    <div>{{state.year}}</div>
+    <div>
+      <span class="navigation" (click)="changeMonth('previous')"><</span>
+      {{monthNames[state.month-1]}}
+      <span class="navigation" (click)="changeMonth('next')">></span>
+    </div>
+  </h3>
   <table>
     <tr>
         <th *ngFor="let dayname of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']"><p>{{dayname}}</p></th>
