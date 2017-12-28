@@ -2,9 +2,9 @@
   <h3>
     <div>{{state.year}}</div>
     <div>
-      <span class="navigation" (click)="changeMonth('previous')"><</span>
+      <span (click)="changeMonth('previous')"><</span>
       {{monthNames[state.month-1]}}
-      <span class="navigation" (click)="changeMonth('next')">></span>
+      <span (click)="changeMonth('next')">></span>
     </div>
   </h3>
   <table>

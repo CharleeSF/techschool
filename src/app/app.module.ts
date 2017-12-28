@@ -23,7 +23,8 @@ import { EventService } from './calendar/events.service';
     HttpModule,
     RouterModule.forRoot([
       { path: '', component: MainComponent },
-      { path: 'planning', component: PlanningComponent }
+      { path: 'planning', component: PlanningComponent },
+      
     ])
   ],
   providers: [EventService],

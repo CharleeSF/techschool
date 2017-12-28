@@ -1,11 +1,22 @@
+<div id="mybody">
 <header>
-  <div id=title-container>
-    <h1>
-      startBlok
-    </h1>
-    <h2>
-      techSchool
-    </h2>
-  </div>
+  <ul>
+    <li><a [routerLink]="['']">Info</a></li>
+    <li><a [routerLink]="['/planning']">Planning</a></li> 
+    <li></li>
+    <li class="nolink">
+      <div id=title-container>
+        <h1>
+          <span id="startblok">startBlok</span><span id="techschool">techSchool</span>
+        </h1>
+      </div>
+    </li>
+    <li></li>
+    <li><a [routerLink]="['']">Program</a></li>
+    <li><a [routerLink]="['']">Contact</a></li>
+  </ul>
 </header>
+<div id="routerwrapper">
 <router-outlet></router-outlet>
+</div>
+</div>

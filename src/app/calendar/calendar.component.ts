@@ -92,14 +92,14 @@ class Week {
   days: Day[];
   constructor(data, year, month, numberOfWeeksSoFar, monthStartDay, numDays) {
     this.days = [];
-    let startLoop = 1;
+    let startLoop = 0;
     if (numberOfWeeksSoFar == 0){
-      for (let i=1; i<monthStartDay; i++) {
+      for (let i=0; i<monthStartDay; i++) {
         this.days.push(undefined);
       }
       startLoop = monthStartDay;
     }
-    for (let i=startLoop; i<=NUMBER_OF_WEEKDAYS; i++) {
+    for (let i=startLoop; i<NUMBER_OF_WEEKDAYS; i++) {
       let dayNum = numberOfWeeksSoFar*NUMBER_OF_WEEKDAYS-monthStartDay;
 
       if ((dayNum + i) < numDays) {
@@ -137,17 +137,23 @@ class Event {
 }
 
 function getNow() {
-  let now = Date.now();
-  console.log('now');
-  return [2017, 12];
+  let d = new Date();
+  return [d.getFullYear(), d.getMonth()+1];
 }
 
 function getStartDay(year, month) {
-  return 3;
+  let d = new Date(`${year}-${month}-01`);
+  let javascriptDay = d.getDay();
+  let myDay = (javascriptDay + 6)%7; // I think monday is the first day of the week
+  console.log(myDay);
+  return myDay;
 }
 
 function getNumDays(year, month) {
-  return 30;
+  // even though Date months are 0-based, the current
+  // approach gets the last day of the 'previous' month, so you
+  // want to enter the month after the one you're interested in
+  return new Date(year, month, 0).getDate();
 }
 
 function getEvents(data, year, month, dayNum) {
@@ -166,9 +172,7 @@ function getEvents(data, year, month, dayNum) {
     return events;
   }
   else {
-    console.log("no data :(");
-    return [new Event("bla", [20,30], [21,30], false)];
-    
+    return [];
   }
   
 }
